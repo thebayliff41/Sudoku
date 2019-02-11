@@ -9,14 +9,13 @@ import javafx.stage.Stage;
 public class Sudoku extends Application {
 
     public static void main(String[] args) {
-	Application.launch();
-    }//main
+        Application.launch();
+    }// main
 
     @Override
     public void start(Stage primaryStage) {
         StackPane stack = new StackPane();
         BorderPane border = new BorderPane();
-	//        stack.getChildren().add(backgroundPane);
         stack.getChildren().add(border);
 
         Grid grid = new Grid();
@@ -28,6 +27,6 @@ public class Sudoku extends Application {
         primaryStage.setTitle("Sudoku");
         primaryStage.show();
 
-    }//start
+    }// start
 
-}//Application
+}// Application
