@@ -6,7 +6,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+/**
+ * Class that runs the Sudoku application
+ * @author Bailey Nelson
+ * @author baileyd.nelson@gmail.com
+ */
 public class Sudoku extends Application {
 
     public static void main(String[] args) {
@@ -26,6 +30,8 @@ public class Sudoku extends Application {
         VBox root = new VBox(menu, stack);
 
         Scene primaryScene = new Scene(root);
+
+        primaryScene.getStylesheets().add("Sudoku.css");
 
         primaryStage.setScene(primaryScene);
         primaryStage.setTitle("Sudoku");
