@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Sudoku extends Application {
@@ -21,7 +22,10 @@ public class Sudoku extends Application {
         Grid grid = new Grid();
         border.setCenter(grid);
 
-        Scene primaryScene = new Scene(stack);
+        Top menu = new Top();
+        VBox root = new VBox(menu, stack);
+
+        Scene primaryScene = new Scene(root);
 
         primaryStage.setScene(primaryScene);
         primaryStage.setTitle("Sudoku");
