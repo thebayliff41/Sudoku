@@ -13,18 +13,37 @@ public class GridSquare extends StackPane {
 
   private int num; //value of square
   private Rectangle square = new Rectangle(50, 50); //size of square
-  private Text text = new Text(String.valueOf(num));
+  private Text text;
   private boolean isConst = false; //Can the user change this tile
+  private int row;
+  private int col;
 
-  public GridSquare() {
+  public GridSquare(int num, int row, int col) {
     super();
+    this.num = num;
+    this.row = row;
+    this.col = col;
     square.setFill(Color.TRANSPARENT);
-
     square.setStroke(Color.BLACK);
-    this.getChildren().add(square);
-    this.getChildren().add(text);
-
+    text = new Text(String.valueOf(num));
+    this.getChildren().addAll(square, text);
   }// GridSquare
+
+  public int getRow() {
+    return row;
+  }
+
+  public int getCol() {
+    return col;
+  }
+
+  // public GridSquare(int num) {
+  //   super();
+  //   this.num = num;
+  //   square.setFill(Color.TRANSPARENT);
+  //   square.setStroke(Color.BLACK);
+  //   this.getChildren().addAll(square, text);
+  // }
 
   /**
    * Gets value of square

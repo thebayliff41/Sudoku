@@ -18,8 +18,3 @@
 .cell:right:bottom {
     -fx-background-insets: 0, 0 3 3 0 ;
 }
-
-/* .cell .text-field {
-    -fx-pref-width: 3em ;
-    -fx-pref-height: 3em ;
-} */
