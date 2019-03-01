@@ -17,6 +17,7 @@ public class GridSquare extends StackPane {
   private boolean isConst = false; //Can the user change this tile
   private int row;
   private int col;
+  private int psuedo;
 
   public GridSquare(int num, int row, int col) {
     super();
@@ -27,6 +28,7 @@ public class GridSquare extends StackPane {
     square.setStroke(Color.BLACK);
     text = new Text(String.valueOf(num));
     this.getChildren().addAll(square, text);
+    psuedo = num;
   }// GridSquare
 
   public int getRow() {
@@ -63,8 +65,16 @@ public class GridSquare extends StackPane {
 
     num = n;
 
-    text.setText(String.valueOf(n));
+    text.setText(String.valueOf(num));
   }//setNum
+
+  public void psuedoset(int n) {
+    psuedo = n;
+  }
+
+  public int getPsuedo() {
+    return psuedo;
+  }
 
   /**
    * Set if the user can change the value of the square

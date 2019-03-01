@@ -12,9 +12,15 @@ import javafx.stage.Stage;
  */
 public class Sudoku extends Application {
 
+    private final Grid grid = new Grid();
+
     public static void main(String[] args) {
         Application.launch();
     }// main
+
+    public Grid getGrid() {
+        return grid;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -22,13 +28,15 @@ public class Sudoku extends Application {
         BorderPane border = new BorderPane();
         stack.getChildren().add(border);
 
-        Grid grid = new Grid();
+        // grid = new Grid();
         border.setCenter(grid);
 
-        Top menu = new Top();
+        Top menu = new Top(this);
         VBox root = new VBox(menu, stack);
 
         Scene primaryScene = new Scene(root);
+
+        // primaryScene.setOnMouseClicked(e -> System.out.println(grid.getTest()));
 
         primaryScene.getStylesheets().add("Sudoku.css");
 

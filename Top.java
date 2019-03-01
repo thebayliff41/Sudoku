@@ -8,14 +8,16 @@ import javafx.scene.control.MenuItem;
  * @author baileyd.nelson@gmail.com
 */
 public class Top extends MenuBar {
-    public Top() {
+    public Top(Sudoku app) {
         super();
 
         //File options
         final Menu file = new Menu("File");
         final MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> System.exit(0));
-        file.getItems().addAll(exit);
+        final MenuItem reset = new MenuItem("Reset Board");
+        reset.setOnAction(e -> app.getGrid().reset());
+        file.getItems().addAll(reset, exit);
 
         //Help options
         final Menu help = new Menu("Help");
