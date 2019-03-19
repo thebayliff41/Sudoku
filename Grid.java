@@ -8,7 +8,7 @@ import javafx.css.PseudoClass;
  */
 public class Grid extends GridPane {
 	private GridSquare[][] gridsquares; //representation of the grid
-	private int test = 0;
+	Random rand = new Random();
 
 	public Grid() {
 		super();
@@ -37,26 +37,12 @@ public class Grid extends GridPane {
 	}// Grid
 
 	public void reset() {
-		// Random rand = new Random();
-
 		for (int r = 0; r < gridsquares.length; r++)
-			for (int c = 0; c < gridsquares[r].length; c++) {
+			for (int c = 0; c < gridsquares[r].length; c++) 
 				gridsquares[r][c].setNum(0);
-				gridsquares[r][c].psuedoset(0);
-			}
-
-		// for (int i = 0, col = 0, row = 0, value = 0; i < 10; i++) {
-		// 	row = rand.nextInt(9);
-		// 	col = rand.nextInt(9);
-		// 	value = rand.nextInt(9) + 1;
-
-		// 	if (checkValid(row, col, value)) 
-		// 		gridsquares[row][col].setNum(value);
-		// 	else i--;
-		// } 
 
 			solve();
-			unsolve();
+			// unsolve();
 	}
 
 	//Unnecessary for internal use, the return value of nextEmpty does the same
@@ -69,13 +55,6 @@ public class Grid extends GridPane {
 	}
 
 	private GridSquare nextEmpty() {
-		// Random rand = new Random();
-		// int x = 0;
-		// int y = 0;
-		// for (int r = rand.nextInt(9) + 1; x < 100; x++, r++ )
-		// 	for (int c = rand.nextInt(9) + 1; y < 100; y++)
-		// 		if (gridsquares[r%9][c%9].getNum() == 0) return gridsquares[r%9][c%9];
-
 		for (int r = 0; r < gridsquares.length; r++)
 			for (int c = 0; c < gridsquares[r].length; c++)
 				if (gridsquares[r][c].getNum() == 0) return gridsquares[r][c];
@@ -85,7 +64,7 @@ public class Grid extends GridPane {
 
 	public boolean solve() {
 		GridSquare empty;
-		Random rand = new Random();
+		// Random rand = new Random();
 		for (int i = 1; i < 30; i++) {
 			if ((empty = nextEmpty()) == null) return true;
 
@@ -113,11 +92,11 @@ public class Grid extends GridPane {
 	 */
 	private boolean checkValid(int row, int col, int val) {
 		for (int r = 0; r < gridsquares.length; r++)  //check row
-			if (gridsquares[r][col] != null && gridsquares[r][col].getNum() == val)
+			if (gridsquares[r][col].getNum() == val)
 				return false;
 		
 		for (int c = 0; c < gridsquares[row].length; c++) //check col
-			if (gridsquares[row][c] != null && gridsquares[row][c].getNum() == val)
+			if (gridsquares[row][c].getNum() == val)
 				return false;	
 
 		for (int r = 0; r < 3; r++) { //check box
@@ -136,7 +115,8 @@ public class Grid extends GridPane {
 	 * @return a random valid integer, or -1 if there is no valid integer
 	 */
 	private int getRandValid(GridSquare square) {
-		Random rand = new Random();
+		// Random rand = new Random();
+		System.out.println("here");
 
 		int[] values = new int[9];
 
@@ -152,96 +132,4 @@ public class Grid extends GridPane {
 
 	}
 
-	private void unsolve() {
-		Random rand = new Random();
-		boolean notLeast = true;
-		copy();
-		while(notLeast && test++ < 100) {
-			int row = rand.nextInt(9);
-			int col = rand.nextInt(9);
-			int copy = gridsquares[row][col].getNum();
-			gridsquares[row][col].setNum(0);
-			// System.out.println(test);
-			if (!solvecopy()) {
-				gridsquares[row][col].setNum(copy);
-				break;
-			}
-		}
-		// System.out.println(test);
-	}
-
-	// private void show() {
-	// 	for (int r = 0; r < gridsquares.length; r++)
-	// 		for (int c = 0; c < gridsquares[r].length; c++)
-	// 			gridsquares[r][c].setNum(gridsquares[r][c].getPsuedo());
-	// }
-
-	// private boolean copySolve() {
-	// 	// GridSquare[][] copy = new GridSquare[9][9];
-	// 	// for (int r = 0; r < gridsquares.length; r++) {
-	// 	// 	for (int c = 0; c < gridsquares[r].length; c++) {
-	// 	// 		copy[r][c] = gridsquares[r][c];
-	// 	// 		// System.out.print(copy[r][c].getNum());
-	// 	// 	}
-	// 	// 	// System.out.println("");
-	// 	// }//for
-
-	// 	// boolean toReturn = solvecopy();
-	// 	// System.out.println(toReturn);
-
-	// 	// for (int r = 0; r < gridsquares.length; r++)
-	// 	// 	for (int c = 0; c < gridsquares[r].length; c++)
-	// 	// 		gridsquares[r][c] = copy[r][c];
-
-	// 	// return toReturn;
-	// 	// return solvecopy();
-	// }
-	
-	private void copy() {
-		for (int i = 0; i < gridsquares.length; i++)
-			for (int c = 0; c < gridsquares[i].length; c++)
-				gridsquares[i][c].psuedoset(gridsquares[i][c].getNum());
-	}
-
-	public boolean solvecopy() {
-		GridSquare empty;
-		Random rand = new Random();
-		for (int i = 1; i < 30; i++) {
-			if ((empty = nextcopyEmpty()) == null) return true;
-
-			int val;
-			if ((val = getRandValid(empty)) == -1) return false;
-
-				empty.psuedoset(val);
-				if (solvecopy()) return true;
-				empty.psuedoset(0);
-		}	
-		return false;
-	}//setup
-
-
-	private GridSquare nextcopyEmpty() {
-		for (int r = 0; r < gridsquares.length; r++)
-			for (int c = 0; c < gridsquares[r].length; c++)
-				if (gridsquares[r][c].getPsuedo() == 0) return gridsquares[r][c];
-
-		return null;
-	}
-
-	private boolean checkValidCopy(int row, int col, int val) {
-		for (int r = 0; r < gridsquares.length; r++)  //check row
-			if (gridsquares[r][col] != null && gridsquares[r][col].getPsuedo() == val)
-				return false;
-		
-		for (int c = 0; c < gridsquares[row].length; c++) //check col
-			if (gridsquares[row][c] != null && gridsquares[row][c].getPsuedo() == val)
-				return false;	
-
-		for (int r = 0; r < 3; r++) { //check box
-			for (int c = 0; c < 3; c++)
-				if (gridsquares[row - row%3 + r][col-col%3 + c].getPsuedo() == val) return false;
-
-		}
-		return true;
-	}
 }// Grid
