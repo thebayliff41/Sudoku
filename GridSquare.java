@@ -84,6 +84,10 @@ public class GridSquare extends StackPane {
     isConst = val;
   }//setConst
 
+  public void setTextVisible(boolean visible) {
+    text.setVisible(visible);
+  }
+
 }// GridSquare
 
 
