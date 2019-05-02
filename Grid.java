@@ -1,22 +1,21 @@
 import javafx.scene.layout.GridPane;
-
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.ArrayList; //arraylist methods
+import java.util.Collections; //collections.shuffle
 import java.util.Random;
 import javafx.css.PseudoClass;
 
-
 /**
  * Class that represents the Grid of the Sudoku game
- * 
  */
 public class Grid extends GridPane {
-	public enum Difficulty {EASY, MEDIUM, HARD};
-
 	private GridSquare[][] gridsquares; //representation of the grid
 	private ArrayList<GridSquare> emptyList;
 	private ArrayList<GridSquare> allSquares;
 
+	/**
+	 * Constructor that creates a random valid board and then
+	 * unsolves the board so that it is only one valid solution
+	 */
 	public Grid() {
 		super();
 
@@ -49,7 +48,6 @@ public class Grid extends GridPane {
 		solve();
 		unsolve();
 		update();
-
 	}// Grid
 
 	/**
@@ -65,7 +63,7 @@ public class Grid extends GridPane {
 				gridsquares[r][c].setNum(0);
 				gridsquares[r][c].setTextVisible(true);
 				emptyList.add(index, gridsquares[r][c]);
-				allSquares.add(gridsquares[r][c]);
+				allSquares.add(index, gridsquares[r][c]);
 			}
 		}
 
@@ -122,12 +120,13 @@ public class Grid extends GridPane {
 	 * uniqueness
 	 */
 	private void unsolve() {
-		ArrayList<GridSquare> removed = new ArrayList<GridSquare>();
+		//all of the removed values from the board
+		ArrayList<GridSquare> removed = new ArrayList<GridSquare>(81);
 
 		while (!allSquares.isEmpty()) {
-			GridSquare square = allSquares.remove(0);
-			int old = square.getNum();
-			square.setNum(0);
+			GridSquare square = allSquares.remove(0); //get a new square
+			int old = square.getNum(); //the old value of the square
+			square.setNum(0); //set the value to empty
 			removed.add(0, square);
 
 			if (!isValid(new int[]{0}, removed)) {
@@ -154,16 +153,19 @@ public class Grid extends GridPane {
 		GridSquare empty = copy.remove(0);
 		ArrayList<Integer> valids = getValids(empty);
 
-		if (valids.size() > 2) return false;;
+		//if there are less than 2 results, it runs faster
+		if (valids.size() > 1) return false;
 
 		while (!valids.isEmpty()) {
 			empty.setNum(valids.remove(0));
-			if (!isValid(solutions, copy)) return false;
+			if (!isValid(solutions, copy)) {
+				empty.setNum(0);
+				return false;
+			}
 			empty.setNum(0);
 		}
 
 		return true;
-
 }
 
 
@@ -206,9 +208,7 @@ public class Grid extends GridPane {
 		int row = square.getRow();
 		int col = square.getCol();
 
-		for (int i = 1; i < 10; i++)
-			if (checkValid(row, col, i))
-				values[arrayindex++] = i;
+		for (int i = 1; i < 10; i++) if (checkValid(row, col, i)) values[arrayindex++] = i;
 
 		return (arrayindex > 0) ? values[rand.nextInt(arrayindex)] : -1;
 	}
@@ -218,9 +218,16 @@ public class Grid extends GridPane {
 	 */
 	private void update() {
 		for (int r = 0; r < gridsquares.length; r++)
-			for (int c = 0; c < gridsquares[r].length; c++)
-				if (gridsquares[r][c].getNum() == 0) gridsquares[r][c].setTextVisible(false);
+			for (int c = 0; c < gridsquares[r].length; c++) {
+				GridSquare square = gridsquares[r][c];
+				if (gridsquares[r][c].getNum() == 0) {
+					gridsquares[r][c].setTextVisible(false);
+					gridsquares[r][c].setOnMouseClicked((e) -> {
+						ArrayList<Integer> valids = getValids(square);
+						for (int x : valids) System.out.println(x);
+						if (valids.size() == 1) square.setNum(valids.remove(0));
+					});
+				} else gridsquares[r][c].setConst(true);
+			}
 	}
-
-
 }// Grid
