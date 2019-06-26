@@ -18,6 +18,7 @@ public class GridSquare extends StackPane {
   private int row;
   private int col;
   private int psuedo;
+  private int trueNum;
 
   public GridSquare(int num, int row, int col) {
     super();
@@ -31,29 +32,15 @@ public class GridSquare extends StackPane {
     psuedo = num;
   }// GridSquare
 
-  public int getRow() {
-    return row;
-  }
+  public int getRow() { return row; }
 
-  public int getCol() {
-    return col;
-  }
-
-  // public GridSquare(int num) {
-  //   super();
-  //   this.num = num;
-  //   square.setFill(Color.TRANSPARENT);
-  //   square.setStroke(Color.BLACK);
-  //   this.getChildren().addAll(square, text);
-  // }
+  public int getCol() { return col; }
 
   /**
    * Gets value of square
    * @return value of square
    */
-  public int getNum() {
-    return num;
-  }//getNum
+  public int getNum() { return num; }//getNum
 
   /**
    * Sets the value of n if the square isn't constant
@@ -68,26 +55,25 @@ public class GridSquare extends StackPane {
     text.setText(String.valueOf(num));
   }//setNum
 
-  public void psuedoset(int n) {
-    psuedo = n;
-  }
+  public void psuedoset(int n) { psuedo = n; }
 
-  public int getPsuedo() {
-    return psuedo;
-  }
+  public int getPsuedo() { return psuedo; }
 
   /**
    * Set if the user can change the value of the square
    * @param val if the user can change the value (True means they can't)
    */
-  public void setConst(boolean val) {
-    isConst = val;
-  }//setConst
+  public void setConst(boolean val) { isConst = val; }//setConst
 
-  public void setTextVisible(boolean visible) {
-    text.setVisible(visible);
-  }
+  public boolean isConst() { return isConst; }
 
+  public void setTextVisible(boolean visible) { text.setVisible(visible); }
+
+  public void setColor(Color c) { text.setFill(c); }
+
+  public void setTrue(int n) { trueNum = n; }
+
+  public int getTrue() { return trueNum; }
 }// GridSquare
 
 

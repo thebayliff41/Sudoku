@@ -18,3 +18,7 @@
 .cell:right:bottom {
     -fx-background-insets: 0, 0 3 3 0 ;
 }
+
+.cell:focused {
+    -fx-background-color: #d2eeee;
+}

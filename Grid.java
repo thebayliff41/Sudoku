@@ -1,8 +1,12 @@
+
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList; //arraylist methods
 import java.util.Collections; //collections.shuffle
 import java.util.Random;
 import javafx.css.PseudoClass;
+import javafx.scene.Scene; //setOnKeyPressed
+import javafx.scene.input.KeyCode; //various keycodes
+import javafx.scene.paint.Color; //Color.aColor
 
 /**
  * Class that represents the Grid of the Sudoku game
@@ -11,6 +15,7 @@ public class Grid extends GridPane {
 	private GridSquare[][] gridsquares; //representation of the grid
 	private ArrayList<GridSquare> emptyList;
 	private ArrayList<GridSquare> allSquares;
+    private int wrong = 0; //doesn't work yet
 
 	/**
 	 * Constructor that creates a random valid board and then
@@ -39,11 +44,37 @@ public class Grid extends GridPane {
 				this.add(gridsquares[r][c], r, c);
 				emptyList.add(index, gridsquares[r][c]);
 				allSquares.add(gridsquares[r][c]);
+
+                //When the square is clicked and a number is typed, put it in the square
+                gridsquares[r][c].setOnKeyPressed((e) -> {
+                        System.out.println(wrong);
+                        GridSquare square = (GridSquare) e.getSource();
+                        if (square.getNum() == 0 || square.getNum() != square.getTrue()) wrong--;
+                        if (!square.isFocused()) return;
+                        if (!e.getCode().isDigitKey())  return;
+                        if (square.isConst()) return;
+                        if (e.getCode() == KeyCode.DIGIT0) { //reset square on 0
+                                wrong++;
+                                square.setTextVisible(false);
+                                square.setColor(Color.BLACK);
+                                return;
+                        }
+
+                        //place the key pressed inside the box
+                        square.setColor(Color.GREY);
+                        square.setNum(Integer.parseInt(e.getCode().getName()));
+                        square.setTextVisible(true);
+
+                        if (square.getNum() != square.getTrue()) wrong++;
+
+                        if (wrong == 0) System.out.println("WINNER!");
+                });//seton
 			} // for
 		} // for
 
 		// Collections.shuffle(emptyList); Causes the program to be too slow
 		Collections.shuffle(allSquares);
+
 		//come up with a random solution
 		solve();
 		unsolve();
@@ -56,14 +87,17 @@ public class Grid extends GridPane {
 	public void reset() {
 		allSquares = new ArrayList<GridSquare>(81);
 		emptyList = new ArrayList<GridSquare>(81);
+        wrong = 0;
 		for (int r = 0; r < gridsquares.length; r++) {
 			int index = (Math.random() < .5) ? 0 : emptyList.size();
 
 			for (int c = 0; c < gridsquares[r].length; c++) {
+                gridsquares[r][c].setConst(false);
 				gridsquares[r][c].setNum(0);
 				gridsquares[r][c].setTextVisible(true);
+                gridsquares[r][c].setColor(Color.BLACK);
 				emptyList.add(index, gridsquares[r][c]);
-				allSquares.add(index, gridsquares[r][c]);
+				allSquares.add(gridsquares[r][c]);
 			}
 		}
 
@@ -106,8 +140,10 @@ public class Grid extends GridPane {
 			int num = valids.remove(0);
 
 			empty.setNum(num);
+            empty.setTrue(num); //+
 			if (solve()) return true;
 			empty.setNum(0);
+            empty.setTrue(0); //+
 		}
 
 		emptyList.add(0, empty);
@@ -199,6 +235,7 @@ public class Grid extends GridPane {
 	 * @param square the space to check
 	 * @return a random valid integer, or -1 if there is no valid integer
 	 */
+    @Deprecated
 	private int getRandValid(GridSquare square) {
 		Random rand = new Random();
 
@@ -221,11 +258,17 @@ public class Grid extends GridPane {
 			for (int c = 0; c < gridsquares[r].length; c++) {
 				GridSquare square = gridsquares[r][c];
 				if (gridsquares[r][c].getNum() == 0) {
+                    wrong++;
 					gridsquares[r][c].setTextVisible(false);
 					gridsquares[r][c].setOnMouseClicked((e) -> {
+                        square.requestFocus();
+                                /*
 						ArrayList<Integer> valids = getValids(square);
-						for (int x : valids) System.out.println(x);
-						if (valids.size() == 1) square.setNum(valids.remove(0));
+						if (valids.size() == 1) { //if there is only one solution, display it
+                                square.setNum(valids.remove(0));
+                                square.setTextVisible(true);
+                        }//if
+                        */
 					});
 				} else gridsquares[r][c].setConst(true);
 			}
