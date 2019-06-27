@@ -7,6 +7,12 @@ import javafx.css.PseudoClass;
 import javafx.scene.Scene; //setOnKeyPressed
 import javafx.scene.input.KeyCode; //various keycodes
 import javafx.scene.paint.Color; //Color.aColor
+import java.io.File; //File object
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Class that represents the Grid of the Sudoku game
@@ -92,10 +98,7 @@ public class Grid extends GridPane {
 			int index = (Math.random() < .5) ? 0 : emptyList.size();
 
 			for (int c = 0; c < gridsquares[r].length; c++) {
-                gridsquares[r][c].setConst(false);
-				gridsquares[r][c].setNum(0);
-				gridsquares[r][c].setTextVisible(true);
-                gridsquares[r][c].setColor(Color.BLACK);
+                gridsquares[r][c].reset();
 				emptyList.add(index, gridsquares[r][c]);
 				allSquares.add(gridsquares[r][c]);
 			}
@@ -272,5 +275,63 @@ public class Grid extends GridPane {
 					});
 				} else gridsquares[r][c].setConst(true);
 			}
-	}
+	}//update
+
+    public void changeColor(Color c) {
+            String hex1;
+            String hex2;
+ hex1 = Integer.toHexString(c.hashCode()).toUpperCase();
+
+    switch (hex1.length()) {
+    case 2:
+        hex2 = "000000";
+        break;
+    case 3:
+        hex2 = String.format("00000%s", hex1.substring(0,1));
+        break;
+    case 4:
+        hex2 = String.format("0000%s", hex1.substring(0,2));
+        break;
+    case 5:
+        hex2 = String.format("000%s", hex1.substring(0,3));
+        break;
+    case 6:
+        hex2 = String.format("00%s", hex1.substring(0,4));
+        break;
+    case 7:
+        hex2 = String.format("0%s", hex1.substring(0,5));
+        break;
+    default:
+        hex2 = hex1.substring(0, 6);
+    }
+        System.out.println("color is " + hex2);
+        hex2 = "#" + hex2;
+        try {
+        String rule = "-fx-background-color: " + hex2 + ";";
+        File css = new File("./Sudoku.css");
+        File temp = new File("./temp");
+
+        BufferedReader reader = new BufferedReader(new FileReader(css));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
+
+        String toDel = ":focused";
+        String cur;
+
+        while ((cur = reader.readLine()) != null) {
+                if (cur.contains(toDel)) {
+                        writer.write(cur + "\n");
+                        reader.readLine();
+                        writer.write(rule + "\n");
+                        continue;
+                }//if
+                writer.write(cur + "\n");
+        }//while
+        writer.close();
+        reader.close();
+
+        temp.renameTo(css);
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }//changeColor
 }// Grid

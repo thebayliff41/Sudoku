@@ -13,30 +13,27 @@ import javafx.stage.Stage;
 public class Sudoku extends Application {
 
     private final Grid grid = new Grid();
+    private Stage stage;
 
-    public static void main(String[] args) {
-        Application.launch();
-    }// main
+    public static void main(String[] args) { Application.launch(); }
 
-    public Grid getGrid() {
-        return grid;
-    }
+    public Grid getGrid() { return grid; }
+
+    public Stage getStage() { return stage; }
 
     @Override
     public void start(Stage primaryStage) {
+        stage = primaryStage;
         StackPane stack = new StackPane();
         BorderPane border = new BorderPane();
         stack.getChildren().add(border);
 
-        // grid = new Grid();
         border.setCenter(grid);
 
         Top menu = new Top(this);
         VBox root = new VBox(menu, stack);
 
         Scene primaryScene = new Scene(root);
-
-        // primaryScene.setOnMouseClicked(e -> System.out.println(grid.getTest()));
 
         primaryScene.getStylesheets().add("Sudoku.css");
 
@@ -45,9 +42,5 @@ public class Sudoku extends Application {
         primaryStage.show();
 
     }// start
-
-    public void init() {
-
-    }
 
 }// Application

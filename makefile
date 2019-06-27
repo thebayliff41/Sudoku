@@ -1,5 +1,6 @@
 JC = javac
-JFLAGS = -g
+JFLAGS = -g --module-path /Library/Java/JavaVirtualMachines/JavaFX/lib --add-modules javafx.controls 
+RUN = java --module-path /Library/Java/JavaVirtualMachines/JavaFX/lib --add-modules javafx.controls 
 CLASSES = $(wildcard *.java)
 MAIN = Sudoku
 
@@ -13,7 +14,7 @@ default: classes
 classes: $(CLASSES:.java=.class)
 
 run: $(MAIN).class
-	java $(MAIN)
+	$(RUN) $(MAIN)
 
 clean:
 	$(RM) *.class 
