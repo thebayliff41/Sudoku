@@ -22,6 +22,7 @@ public class Grid extends GridPane {
 	private ArrayList<GridSquare> emptyList;
 	private ArrayList<GridSquare> allSquares;
     private int wrong = 0; //doesn't work yet
+    private Color currentColor;
 
 	/**
 	 * Constructor that creates a random valid board and then
@@ -29,6 +30,26 @@ public class Grid extends GridPane {
 	 */
 	public Grid() {
 		super();
+
+        //get the current color
+        try {
+        BufferedReader reader = new BufferedReader(new FileReader(new File("./Sudoku.css")));
+        String toFind = ":focused";
+        String current;
+        String color = "null";
+
+        while ((current = reader.readLine()) != null) {
+                if (current.contains(toFind)) {
+                        current = reader.readLine();
+                        color = current.substring(current.indexOf('#'), current.indexOf('#') + 7);
+                        break;
+                }//if
+        }//while
+
+        currentColor = Color.valueOf(color);
+        } catch (IOException e) {
+                e.printStackTrace();
+        }//catch
 
 		gridsquares = new GridSquare[9][9];
 		emptyList = new ArrayList<GridSquare>(81);
@@ -263,61 +284,58 @@ public class Grid extends GridPane {
 				if (gridsquares[r][c].getNum() == 0) {
                     wrong++;
 					gridsquares[r][c].setTextVisible(false);
-					gridsquares[r][c].setOnMouseClicked((e) -> {
-                        square.requestFocus();
-                                /*
-						ArrayList<Integer> valids = getValids(square);
-						if (valids.size() == 1) { //if there is only one solution, display it
-                                square.setNum(valids.remove(0));
-                                square.setTextVisible(true);
-                        }//if
-                        */
-					});
+					gridsquares[r][c].setOnMouseClicked((e) -> square.requestFocus());
 				} else gridsquares[r][c].setConst(true);
 			}
 	}//update
 
-    public void changeColor(Color c) {
-            String hex1;
-            String hex2;
- hex1 = Integer.toHexString(c.hashCode()).toUpperCase();
+    /**
+      Changes the color of the highlight of the square when it is clicked.
+      It modifies the "Sudoku.css" file
 
-    switch (hex1.length()) {
-    case 2:
-        hex2 = "000000";
-        break;
-    case 3:
-        hex2 = String.format("00000%s", hex1.substring(0,1));
-        break;
-    case 4:
-        hex2 = String.format("0000%s", hex1.substring(0,2));
-        break;
-    case 5:
-        hex2 = String.format("000%s", hex1.substring(0,3));
-        break;
-    case 6:
-        hex2 = String.format("00%s", hex1.substring(0,4));
-        break;
-    case 7:
-        hex2 = String.format("0%s", hex1.substring(0,5));
-        break;
-    default:
-        hex2 = hex1.substring(0, 6);
-    }
-        System.out.println("color is " + hex2);
+      @param c the color to change to
+    */
+    public void changeColor(Color c) {
+        String hex1;
+        String hex2;
+        hex1 = Integer.toHexString(c.hashCode()).toUpperCase();
+
+        switch (hex1.length()) { //Getting from color to hex obtained from stack overflow
+            case 2:
+                hex2 = "000000";
+                break;
+            case 3:
+                hex2 = String.format("00000%s", hex1.substring(0,1));
+                break;
+            case 4:
+                hex2 = String.format("0000%s", hex1.substring(0,2));
+                break;
+            case 5:
+                hex2 = String.format("000%s", hex1.substring(0,3));
+                break;
+            case 6:
+                hex2 = String.format("00%s", hex1.substring(0,4));
+                break;
+            case 7:
+                hex2 = String.format("0%s", hex1.substring(0,5));
+                break;
+            default:
+                hex2 = hex1.substring(0, 6);
+        }//switch
+
         hex2 = "#" + hex2;
         try {
-        String rule = "-fx-background-color: " + hex2 + ";";
-        File css = new File("./Sudoku.css");
-        File temp = new File("./temp");
+            String rule = "-fx-background-color: " + hex2 + ";";
+            File css = new File("./Sudoku.css");
+            File temp = new File("./temp");
 
-        BufferedReader reader = new BufferedReader(new FileReader(css));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
+            BufferedReader reader = new BufferedReader(new FileReader(css));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
 
-        String toDel = ":focused";
-        String cur;
+            String toDel = ":focused";
+            String cur;
 
-        while ((cur = reader.readLine()) != null) {
+            while ((cur = reader.readLine()) != null) {
                 if (cur.contains(toDel)) {
                         writer.write(cur + "\n");
                         reader.readLine();
@@ -325,13 +343,17 @@ public class Grid extends GridPane {
                         continue;
                 }//if
                 writer.write(cur + "\n");
-        }//while
-        writer.close();
-        reader.close();
+            }//while
+            writer.close();
+            reader.close();
 
-        temp.renameTo(css);
+            temp.renameTo(css);
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }//changeColor
+
+    public Color getCurrentColor() {
+            return currentColor;
+    }//getCurrentColor
 }// Grid
