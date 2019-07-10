@@ -1,3 +1,4 @@
+
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -13,7 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.geometry.Pos; //Pos.CENTER;
 
 /**
- *  Class for the top menu of the Sudoku app
+ * Class for the top menu of the Sudoku app
  * @author Bailey Nelson
  * @author baileyd.nelson@gmail.com
 */
@@ -41,7 +42,7 @@ public class Top extends MenuBar {
             final ColorPicker cp = new ColorPicker();
             final Button colorUpdate = new Button("Update!");
             colorUpdate.setOnAction(a -> {
-                    app.getGrid().changeColor(cp.getValue());
+                    Coloring.changeColor(Coloring.convertColorToHex(cp.getValue()), "Sudoku.css", "temp_css_file");
                     current.setFill(cp.getValue());
             });
 

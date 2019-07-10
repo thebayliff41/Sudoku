@@ -20,5 +20,5 @@
 }
 
 .cell:focused {
--fx-background-color: #0000FF;
+-fx-background-color: #FF00FF;
 }
