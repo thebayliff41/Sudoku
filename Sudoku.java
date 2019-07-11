@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  */
 public class Sudoku extends Application {
 
-    private final Grid grid = new Grid();
+    private Grid grid;
     private Stage stage;
 
     public static void main(String[] args) { Application.launch(); }
@@ -24,6 +24,7 @@ public class Sudoku extends Application {
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
+        grid = new Grid(this);
         StackPane stack = new StackPane();
         BorderPane border = new BorderPane();
         stack.getChildren().add(border);

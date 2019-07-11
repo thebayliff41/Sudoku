@@ -3,6 +3,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.scene.paint.Paint;
+
 /**
  * Class that represents the squares that make up the grid 
  * of the Sudoku game
@@ -18,6 +20,7 @@ public class GridSquare extends StackPane {
   private int row; //row in board
   private int col; //col in board
   private int trueNum; //The solution value
+  private static Color numColor;
 
   /**
     Constructor taht sets various variables
@@ -34,7 +37,24 @@ public class GridSquare extends StackPane {
     square.setStroke(Color.BLACK);
     text = new Text(String.valueOf(num));
     this.getChildren().addAll(square, text);
+    numColor = Color.GRAY;
   }// GridSquare
+
+  public Paint getTextColor() { return text.getFill(); }
+
+  /**
+   * Sets the color of the numbers in the square
+   *
+   * @param c the new color of the text
+   */
+  public static void setNumColor(Color c) { numColor = c; }
+
+  /**
+   * Gets the color of the numbers in the square
+   *
+   * @return the color of the numbers in the square
+   */
+  public static Color getNumColor() { return numColor; }
 
   /**
     Gets the  row of the square

@@ -8,30 +8,25 @@ import javafx.scene.Scene; //setOnKeyPressed
 import javafx.scene.input.KeyCode; //various keycodes
 import javafx.scene.paint.Color; //Color.aColor
 
-import java.io.File; //File object
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 /**
  * Class that represents the Grid of the Sudoku game
+ * @author Bailey Nelson
+ * @author baileyd.nelson@gmail.com
  */
 public class Grid extends GridPane {
     private GridSquare[][] gridsquares; //representation of the grid
     private ArrayList<GridSquare> emptyList;
     private ArrayList<GridSquare> allSquares;
     private int wrong = 0; 
-    private Color currentHighlightColor;
-    private Color currentNumberColor;
+    private Sudoku app;
 
     /**
      * Constructor that creates a random valid board and then
      * unsolves the board so that it is only one valid solution
      */
-    public Grid() {
+    public Grid(Sudoku app) {
         super();
+        this.app = app;
 
         Coloring.currentHighlightColor = Coloring.readCurrentColorFromFile("./Sudoku.css");
         gridsquares = new GridSquare[9][9];
@@ -43,7 +38,7 @@ public class Grid extends GridPane {
 
         //Fill the grid with squares
         for (int r = 0; r < gridsquares.length; r++) {
-            //randomizes if the column goes in the beginnning of the list, or at the end of the list
+            //randomizes if the column goes in the beginnning or end of the list
             int index = (Math.random() < .5) ? 0 :emptyList.size(); 
 
             for (int c = 0; c < gridsquares[r].length; c++) {
@@ -57,8 +52,7 @@ public class Grid extends GridPane {
 
                 //When the square is clicked and a number is typed, put it in the square
                 gridsquares[r][c].setOnKeyPressed((e) -> {
-                        System.out.println(wrong);
-                        GridSquare square = (GridSquare) e.getSource();
+                        GridSquare square = (GridSquare) e.getSource(); //safe cast
                         if (square.getNum() == 0 || square.getNum() != square.getTrue()) wrong--;
                         if (!square.isFocused()) return;
                         if (!e.getCode().isDigitKey())  return;
@@ -71,7 +65,7 @@ public class Grid extends GridPane {
                         }
 
                         //place the key pressed inside the box
-                        square.setColor(Color.GREY);
+                        //square.setColor(Color.GREY);
                         square.setNum(Integer.parseInt(e.getCode().getName()));
                         square.setTextVisible(true);
 
@@ -274,13 +268,49 @@ public class Grid extends GridPane {
                 if (gridsquares[r][c].getNum() == 0) {
                     wrong++;
                     gridsquares[r][c].setTextVisible(false);
+                    gridsquares[r][c].setColor(Color.GRAY);
                     gridsquares[r][c].setOnMouseClicked((e) -> square.requestFocus());
                 } else gridsquares[r][c].setConst(true);
             }
     }//update
 
-    public Color getCurrentColor() { return currentHighlightColor; }
+/**
+ * Updates the color fo the number that the user places into the grid
+ *
+ * @param c The new color
+ */
+    public void setTextColor(Color c) {
+        //GridSquare.setNumColor(c);
+        for (GridSquare[] g : gridsquares)
+            for (GridSquare s : g) {
+                //if (s.isConst()) continue;
+                if (s.getTextColor() != GridSquare.getNumColor()) continue;
+                s.setColor(c);
+            }//for
+    }//setTextColor
 
-    public Color getCurrentNumberColor() { return currentNumberColor; }
+    /**
+     * Solves the entire board, putting the correct value in the 
+     * correct spot
+     */
+    public void solveBoard() {
+        for (GridSquare[] g : gridsquares)
+            for (GridSquare s : g) {
+                s.setNum(s.getTrue());
+                s.setTextVisible(true);
+                s.setConst(true);
+            }//for
+    }//solveBoard
+    
+/**
+ * Solves the currently highlighted square based on the focus
+ */
+    public void solveSquare() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        square.setNum(square.getTrue());
+        square.setTextVisible(true);
+        square.setConst(true);
+    }//solveSquare
 
 }// Grid

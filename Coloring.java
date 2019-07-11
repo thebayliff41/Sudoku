@@ -91,20 +91,19 @@ public final class Coloring {
       Changes the color of the highlight of the square when it is clicked.
       It modifies the "Sudoku.css" file
 
-      @param colorHash the color to change to
+      @param rule the rule in the css file that we are replacing 
+      @param toDel the rule to delete
       @param origin the original file to read from
       @param tempName the temporary name of the file
     */
-    public static void changeColor(String colorHash, String origin, String tempName) {
+    public static void changeLine(String rule, String toDel, String origin, String tempName) {
         try {
-            String rule = "-fx-background-color: " + colorHash + ";";
             File css = new File(origin);
             File temp = new File(tempName);
 
             BufferedReader reader = new BufferedReader(new FileReader(css));
             BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
 
-            String toDel = ":focused";
             String cur;
 
             while ((cur = reader.readLine()) != null) {
@@ -124,7 +123,5 @@ public final class Coloring {
             e.printStackTrace();
         }
     }//changeColor
-
-
 
 }//coloring
