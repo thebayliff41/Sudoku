@@ -18,7 +18,15 @@ public class Grid extends GridPane {
     private ArrayList<GridSquare> emptyList;
     private ArrayList<GridSquare> allSquares;
     private int wrong = 0; 
-    private Sudoku app;
+    private final Sudoku app;
+
+    /**
+     * Getter for the current board
+     *
+     * @return the current board
+     */
+    public GridSquare[][] getBoard() { return gridsquares; }
+
 
     /**
      * Constructor that creates a random valid board and then
@@ -28,7 +36,9 @@ public class Grid extends GridPane {
         super();
         this.app = app;
 
-        Coloring.currentHighlightColor = Coloring.readCurrentColorFromFile("./Sudoku.css");
+        //Coloring.currentHighlightColor = Coloring.readCurrentColorFromFile("./Sudoku.css");
+        //Coloring.currentNumberColor = Color.GRAY;
+
         gridsquares = new GridSquare[9][9];
         emptyList = new ArrayList<GridSquare>(81);
         allSquares = new ArrayList<GridSquare>(81);
@@ -49,6 +59,12 @@ public class Grid extends GridPane {
                 this.add(gridsquares[r][c], r, c);
                 emptyList.add(index, gridsquares[r][c]);
                 allSquares.add(gridsquares[r][c]);
+
+                gridsquares[r][c].setOnMouseClicked((e) -> {
+                    GridSquare square = (GridSquare) e.getSource();
+                    if (square.isConst()) return;
+                    square.requestFocus();
+                });
 
                 //When the square is clicked and a number is typed, put it in the square
                 gridsquares[r][c].setOnKeyPressed((e) -> {
@@ -113,6 +129,8 @@ public class Grid extends GridPane {
 
         Collections.shuffle(allSquares);
 
+        this.requestFocus();
+
         create();
     }
 
@@ -148,10 +166,10 @@ public class Grid extends GridPane {
             int num = valids.remove(0);
 
             empty.setNum(num);
-            empty.setTrue(num); //+
+            empty.setTrue(num); 
             if (solve()) return true;
             empty.setNum(0);
-            empty.setTrue(0); //+
+            empty.setTrue(0);
         }
 
         emptyList.add(0, empty);
@@ -212,7 +230,6 @@ public class Grid extends GridPane {
         return true;
 }
 
-
     /**
      * Checks if the number trying to be inserted is a valid number
      * return if the value is valid for the location
@@ -269,36 +286,19 @@ public class Grid extends GridPane {
                     wrong++;
                     gridsquares[r][c].setTextVisible(false);
                     gridsquares[r][c].setColor(Color.GRAY);
-                    gridsquares[r][c].setOnMouseClicked((e) -> square.requestFocus());
                 } else gridsquares[r][c].setConst(true);
             }
     }//update
 
-/**
- * Updates the color fo the number that the user places into the grid
- *
- * @param c The new color
- */
-    public void setTextColor(Color c) {
-        //GridSquare.setNumColor(c);
-        for (GridSquare[] g : gridsquares)
-            for (GridSquare s : g) {
-                //if (s.isConst()) continue;
-                if (s.getTextColor() != GridSquare.getNumColor()) continue;
-                s.setColor(c);
-            }//for
-    }//setTextColor
-
-    /**
+   /**
      * Solves the entire board, putting the correct value in the 
      * correct spot
      */
     public void solveBoard() {
         for (GridSquare[] g : gridsquares)
             for (GridSquare s : g) {
-                s.setNum(s.getTrue());
-                s.setTextVisible(true);
-                s.setConst(true);
+                s.solve();
+                wrong--;
             }//for
     }//solveBoard
     
@@ -308,9 +308,15 @@ public class Grid extends GridPane {
     public void solveSquare() {
         if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
         GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
-        square.setNum(square.getTrue());
-        square.setTextVisible(true);
-        square.setConst(true);
+        square.solve();
+        wrong--;
     }//solveSquare
+
+    /**
+     * Resets the focus off of the square
+     */
+    public void resetFocus() {
+        this.requestFocus();
+    }//resetFocus
 
 }// Grid

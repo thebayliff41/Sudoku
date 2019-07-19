@@ -23,31 +23,11 @@ public class GridSquare extends StackPane {
   private static Color numColor;
 
   /**
-    Constructor taht sets various variables
-    @param num the initial value of the square
-    @param row the row of the square
-    @param col the col of the square
-    */
-  public GridSquare(int num, int row, int col) {
-    super();
-    this.num = num;
-    this.row = row;
-    this.col = col;
-    square.setFill(Color.TRANSPARENT);
-    square.setStroke(Color.BLACK);
-    text = new Text(String.valueOf(num));
-    this.getChildren().addAll(square, text);
-    numColor = Color.GRAY;
-  }// GridSquare
-
-  public Paint getTextColor() { return text.getFill(); }
-
-  /**
-   * Sets the color of the numbers in the square
+   * Gets the current text color, used for comparison to the 
    *
-   * @param c the new color of the text
+   * @return the paint value of the text
    */
-  public static void setNumColor(Color c) { numColor = c; }
+  public Paint getTextColor() { return text.getFill(); }
 
   /**
    * Gets the color of the numbers in the square
@@ -73,8 +53,38 @@ public class GridSquare extends StackPane {
    * @return value of square
    */
   public int getNum() { return num; }//getNum
+  /**
+    * Getter for the solution number of the square
+    * @return the solution number of the square
+    */
+  public int getTrue() { return trueNum; }
 
   /**
+    Constructor taht sets various variables
+    @param num the initial value of the square
+    @param row the row of the square
+    @param col the col of the square
+    */
+  public GridSquare(int num, int row, int col) {
+    super();
+    this.num = num;
+    this.row = row;
+    this.col = col;
+    square.setFill(Color.TRANSPARENT);
+    square.setStroke(Color.BLACK);
+    text = new Text(String.valueOf(num));
+    this.getChildren().addAll(square, text);
+    numColor = Color.GRAY;
+  }// GridSquare
+
+  /**
+   * Sets the color of the numbers in the square
+   *
+   * @param c the new color of the text
+   */
+  public static void setNumColor(Color c) { numColor = c; }
+
+    /**
    * Sets the value of n if the square isn't constant
    * @param n the new value
    */
@@ -119,13 +129,7 @@ public class GridSquare extends StackPane {
     */
   public void setTrue(int n) { trueNum = n; }
 
-  /**
-    Getter for the solution number of the square
-    @return the solution number of the square
-    */
-  public int getTrue() { return trueNum; }
-
-  /**
+    /**
     Reset the square to initial settings to reset the board
     */
   public void reset() {
@@ -135,6 +139,15 @@ public class GridSquare extends StackPane {
     num = 0;
     trueNum = 0;
   }//reset
+
+  /**
+   * Solves the square and set it up to be displayed
+   */
+  public void solve() {
+      setNum(trueNum);
+      text.setVisible(true);
+      isConst = true;
+  }//solve
 }// GridSquare
 
 

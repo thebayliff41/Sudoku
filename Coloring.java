@@ -8,8 +8,9 @@ import java.io.IOException;
 import javafx.scene.paint.Color;
 
 public final class Coloring {
-    public static Color currentHighlightColor;
-    public static Color currentNumberColor;
+    public static Color currentHighlightColor = readCurrentColorFromFile("./Sudoku.css");
+    public static Color currentNumberColor = Color.GRAY;
+    public static Color defaultHighlightColor = Color.GRAY;
 
     private Coloring() {
         currentHighlightColor = null;
@@ -123,5 +124,30 @@ public final class Coloring {
             e.printStackTrace();
         }
     }//changeColor
+
+    /**
+     * Sets the color of the numbers throughout the entire board
+     * @param board the game board
+     * @param c the color to change to
+     */
+    public static void setTextColor(GridSquare[][] board, Color c) {
+        for (GridSquare[] arr : board)
+            for (GridSquare gs : arr) {
+                if (gs.getTextColor() != currentNumberColor) continue;
+                gs.setColor(c);
+            }//for
+    }//setTextColor
+
+    /**
+     * Decids if the given color requires a background text of black or white to be readable
+     *
+     * {@link} https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color/3943023#3943023
+     *
+     * @param c The color of the item
+     */
+    public static Color properBackground(Color c) {
+        if ((c.getRed() * 255 * .299) + (c.getGreen() * 255 * .587) + (c.getBlue() * 255  * .114) > 186) return Color.BLACK;
+        else return Color.WHITE;
+    }//properBackground 
 
 }//coloring
