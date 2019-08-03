@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-    <classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/JavaFX/lib/javafx.base.jar"/>
-    <classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/JavaFX/lib/javafx.graphics.jar"/>
-    <classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/JavaFX/lib/javafx.controls.jar"/>
-    <classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/JavaFX/lib/javafx.fxml.jar"/>
-</classpath>

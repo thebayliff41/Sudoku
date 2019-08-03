@@ -8,6 +8,9 @@ import javafx.scene.Scene; //setOnKeyPressed
 import javafx.scene.input.KeyCode; //various keycodes
 import javafx.scene.paint.Color; //Color.aColor
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 /**
  * Class that represents the Grid of the Sudoku game
  * @author Bailey Nelson
@@ -290,26 +293,31 @@ public class Grid extends GridPane {
             }
     }//update
 
-   /**
-     * Solves the entire board, putting the correct value in the 
-     * correct spot
+    /**
+     * Solves the given square and decrements the counter of how many squares are wrong
+     *
+     * @param s The square to solve
      */
+    private void solve(GridSquare s) {
+        s.solve();
+        wrong--;
+    }//solve
+
+   /**
+    * Solves the entire board, putting the correct value in the 
+    * correct spot
+    */
     public void solveBoard() {
-        for (GridSquare[] g : gridsquares)
-            for (GridSquare s : g) {
-                s.solve();
-                wrong--;
-            }//for
+        for (GridSquare[] g : gridsquares) for (GridSquare s : g) solve(s);
     }//solveBoard
     
-/**
- * Solves the currently highlighted square based on the focus
- */
+    /**
+    * Solves the currently highlighted square based on the focus
+    */
     public void solveSquare() {
         if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
         GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
-        square.solve();
-        wrong--;
+        solve(square);
     }//solveSquare
 
     /**
@@ -319,4 +327,102 @@ public class Grid extends GridPane {
         this.requestFocus();
     }//resetFocus
 
+    /**
+     * Solves the col of hte currently highlighted square
+     */
+    public void solveCol() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (GridSquare g : gridsquares[square.getRow()]) solve(g);
+    }//solveRow
+
+    /**
+     * Solves the row of the currently highlighted square
+     */
+    public void solveRow() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for(int i = 0; i < 9; i++) solve(gridsquares[i][square.getCol()]);
+    }//solveCol
+
+    /**
+     * Solves the 3x3 square containing the highlighted square
+     */
+    public void solve3() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (int r = 0; r < 3; r++) for (int c = 0; c < 3; c++) 
+                solve(gridsquares[square.getRow() - square.getRow()%3 + r][square.getCol() - square.getCol()%3 + c]);
+    }//solve3
+
+    /**
+     * Checks the entire board, highlights in red the wrong squares and in green the correct squares
+     */
+   public void checkBoard() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (GridSquare[] g : gridsquares) for (GridSquare s : g) s.check();
+        square.focusedProperty().addListener(new GridSquareListener(square));
+   }//check
+
+    /**
+     * Checks the current square, highlights in red if the square is wrong and in green if it is correct
+     */
+    public void checkSquare() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        square.check();
+        square.focusedProperty().addListener(new GridSquareListener(square));
+   }//checkSquare
+
+    /**
+     * Checks the curren row of the highlighted square, highlights in red if the square is wrong and in green if it is correct
+     */
+    public void checkRow() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (int i = 0; i < 9; i++) gridsquares[i][square.getCol()].check();
+        square.focusedProperty().addListener(new GridSquareListener(square));
+    }//checkRow
+
+    /**
+     * Checks the current col of the highlighted square, highlights in red if the square is wrong and in green if it is correct
+     */
+    public void checkCol() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (GridSquare g : gridsquares[square.getRow()]) g.check();
+        square.focusedProperty().addListener(new GridSquareListener(square));
+    }//checkCol
+
+    /**
+     * Checks the current 3x3 square of the highlighted square, highlights in red if the square is wrong and in green if it is correct
+     */
+    public void check3() {
+        if (!(app.getStage().getScene().focusOwnerProperty().get() instanceof GridSquare)) return;
+        GridSquare square = (GridSquare) app.getStage().getScene().focusOwnerProperty().get();
+        for (int r = 0; r < 3; r++) for (int c = 0; c < 3; c++)
+            gridsquares[square.getRow()-square.getRow()%3 + r][square.getCol() - square.getCol()%3 + c].check();
+        square.focusedProperty().addListener(new GridSquareListener(square));
+    }//check3
+
+    /**
+     * Class to add a ChangeListener to a square to uncheck squares when the focus changes
+     * @author Bailey Nelson
+     * @author baileyd.nelson@gmail.com
+     *
+     */
+    private class GridSquareListener implements ChangeListener<Boolean> {
+        private final GridSquare square;
+
+        GridSquareListener(GridSquare square) {
+            this.square = square;
+        }//GridSquareListener
+
+        @Override
+        public void changed(ObservableValue<? extends Boolean> obs, Boolean oldval, Boolean newval) {
+            if (!newval) for (GridSquare[] s : gridsquares) for (GridSquare g : s) g.uncheck();
+            square.focusedProperty().removeListener(this);
+        }//changed
+    }//GridSquareListener
 }// Grid

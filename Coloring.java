@@ -8,14 +8,13 @@ import java.io.IOException;
 import javafx.scene.paint.Color;
 
 public final class Coloring {
-    public static Color currentHighlightColor = readCurrentColorFromFile("./Sudoku.css");
-    public static Color currentNumberColor = Color.GRAY;
-    public static Color defaultHighlightColor = Color.GRAY;
+    public static Color defaultConstNumberColor = Color.BLACK;
+    public static Color defaultNonConstNumberColor = Color.GRAY;
+    public static Color defaultHighlightColor = Color.ALICEBLUE;
 
-    private Coloring() {
-        currentHighlightColor = null;
-        currentNumberColor = null;
-    }
+    public static Color currentHighlightColor = readCurrentColorFromFile("./Sudoku.css");
+    public static Color currentConstNumberColor = defaultConstNumberColor;
+    public static Color currentNonConstNumberColor = defaultNonConstNumberColor;
 
     /**
      * Converts a Color object to it's hex value, the Color class
@@ -133,7 +132,8 @@ public final class Coloring {
     public static void setTextColor(GridSquare[][] board, Color c) {
         for (GridSquare[] arr : board)
             for (GridSquare gs : arr) {
-                if (gs.getTextColor() != currentNumberColor) continue;
+                if (gs.isConst()) continue; //+
+                if (gs.getTextColor() != currentNonConstNumberColor) continue;
                 gs.setColor(c);
             }//for
     }//setTextColor
@@ -149,5 +149,16 @@ public final class Coloring {
         if ((c.getRed() * 255 * .299) + (c.getGreen() * 255 * .587) + (c.getBlue() * 255  * .114) > 186) return Color.BLACK;
         else return Color.WHITE;
     }//properBackground 
+
+    /**
+     * Resets the state of the colors in the application
+     */
+    public static void reset() {
+        changeLine("-fx-background-color: #F0F8FF;", ":focused", "Sudoku.css",
+               "temp_css_file");
+        currentHighlightColor = defaultHighlightColor;
+        currentNonConstNumberColor = defaultNonConstNumberColor;
+        currentConstNumberColor = defaultConstNumberColor;
+    }//reset
 
 }//coloring

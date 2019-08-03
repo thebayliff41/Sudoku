@@ -148,6 +148,23 @@ public class GridSquare extends StackPane {
       text.setVisible(true);
       isConst = true;
   }//solve
+
+  /**
+   * Sets the fill of the square based on if the correct number is inserted
+   */
+  public void check() {
+      if (trueNum == num) square.setFill(Color.web("#c2f7ad"));
+      else square.setFill(Color.web("#f78686"));
+  }//check
+
+  /**
+   * Resets the color of the square to it's default
+   */
+  public void uncheck() {
+      if (square.getFill() == Color.TRANSPARENT) return;
+      square.setFill(Color.TRANSPARENT);
+  }//uncheck
+
 }// GridSquare
 
 
