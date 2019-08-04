@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 /**
  * Class that runs the Sudoku application
@@ -32,7 +33,12 @@ public class Sudoku extends Application {
         border.setCenter(grid);
 
         Top menu = new Top(this);
-        VBox root = new VBox(menu, stack);
+
+        CountDownTimer timer = new CountDownTimer();
+
+        HBox top = new HBox(menu, timer);
+
+        VBox root = new VBox(top, stack);
 
         Scene primaryScene = new Scene(root);
 
