@@ -72,15 +72,15 @@ public class Grid extends GridPane {
                 //When the square is clicked and a number is typed, put it in the square
                 gridsquares[r][c].setOnKeyPressed((e) -> {
                         GridSquare square = (GridSquare) e.getSource(); //safe cast
-                        if (square.getNum() == 0 || square.getNum() != square.getTrue()) wrong--;
+                        //if (square.getNum() == 0 || square.getNum() != square.getTrue()) wrong--;
                         if (!square.isFocused()) return;
                         if (!e.getCode().isDigitKey())  return;
                         if (square.isConst()) return;
                         if (e.getCode() == KeyCode.DIGIT0) { //reset square on 0
-                                wrong++;
-                                square.setTextVisible(false);
-                                square.setColor(Color.BLACK);
-                                return;
+                            if (square.getNum() == square.getTrue()) wrong++;
+                            square.setTextVisible(false);
+                            square.setColor(Color.BLACK);
+                            return;
                         }
 
                         //place the key pressed inside the box
@@ -88,9 +88,9 @@ public class Grid extends GridPane {
                         square.setNum(Integer.parseInt(e.getCode().getName()));
                         square.setTextVisible(true);
 
-                        if (square.getNum() != square.getTrue()) wrong++;
-
-                        if (wrong == 0) System.out.println("WINNER!");
+                        if (square.getNum() != square.getTrue()) return; 
+                        decrementWrong();
+                        //if (square.getNum() != square.getTrue()) wrong++;
                 });//seton
             } // for
         } // for
@@ -112,6 +112,22 @@ public class Grid extends GridPane {
         unsolve();
         update();
     }//create
+
+    /**
+     * Updates the amount of wrong squares and checks if the user wins
+     */
+    public void decrementWrong() {
+        wrong--;
+        if (wrong == 0) win();
+    }//decrementWrong
+
+    /**
+     * Stops the timer and shows the user that they win
+     */
+    public void win() {
+        System.out.println("Winner!");
+        app.getTimer().stop();
+    }//win
 
     /**
      * Resets the board and resolves it with a new solution 
@@ -300,7 +316,7 @@ public class Grid extends GridPane {
      */
     private void solve(GridSquare s) {
         s.solve();
-        wrong--;
+        decrementWrong();
     }//solve
 
    /**
@@ -410,11 +426,13 @@ public class Grid extends GridPane {
      * Class to add a ChangeListener to a square to uncheck squares when the focus changes
      * @author Bailey Nelson
      * @author baileyd.nelson@gmail.com
-     *
      */
     private class GridSquareListener implements ChangeListener<Boolean> {
         private final GridSquare square;
 
+        /**
+         * Constructor
+         */
         GridSquareListener(GridSquare square) {
             this.square = square;
         }//GridSquareListener

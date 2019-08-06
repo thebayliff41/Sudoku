@@ -16,7 +16,7 @@ public class Options {
     final Scene pop;
     final Stage stage;
 
-    public Options(Stage stage, Grid grid) {
+    public Options(Stage stage, Grid grid, CountDownTimer timer) {
         this.stage = stage;
         final Label inStack = new Label("0");
         inStack.setTextFill(Coloring.properBackground(Coloring.currentHighlightColor));
@@ -67,7 +67,10 @@ public class Options {
         resetPop.setAlignment(Pos.CENTER);
 
         final Button close = new Button("Exit");
-        close.setOnAction((a) -> stage.setScene(old));
+        close.setOnAction((a) -> {
+            timer.resume();
+            stage.setScene(old);
+        });
 
         final VBox root = new VBox(15, boxColor, numColor, resetPop,  close);   
         //root.setAlignment(Pos.CENTER);

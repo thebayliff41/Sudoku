@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 /**
  * Class that runs the Sudoku application
  * @author Bailey Nelson
@@ -15,12 +16,15 @@ public class Sudoku extends Application {
 
     private Grid grid;
     private Stage stage;
+    private CountDownTimer timer;
 
     public static void main(String[] args) { Application.launch(); }
 
     public Grid getGrid() { return grid; }
 
     public Stage getStage() { return stage; }
+
+    public CountDownTimer getTimer() { return timer; }
 
     @Override
     public void start(Stage primaryStage) {
@@ -34,9 +38,11 @@ public class Sudoku extends Application {
 
         Top menu = new Top(this);
 
-        CountDownTimer timer = new CountDownTimer();
+        Label timerText = new Label("here");
 
-        HBox top = new HBox(menu, timer);
+        timer = new CountDownTimer(timerText);
+
+        HBox top = new HBox(menu, timerText);
 
         VBox root = new VBox(top, stack);
 

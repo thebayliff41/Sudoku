@@ -26,7 +26,8 @@ public class Top extends MenuBar {
         final Menu help = new Menu("Help");
         final MenuItem options = new MenuItem("Options");
         options.setOnAction(e -> {
-            final Options popup = new Options(app.getStage(), app.getGrid());
+            app.getTimer().pause();
+            final Options popup = new Options(app.getStage(), app.getGrid(), app.getTimer());
             popup.show();
         });
 
