@@ -20,10 +20,22 @@ public class Sudoku extends Application {
 
     public static void main(String[] args) { Application.launch(); }
 
+    /**
+     * Getter for the main grid of the game
+     * @return the grid of the game
+     */
     public Grid getGrid() { return grid; }
 
+    /**
+     * Getter for the stage of the application
+     * @return stage
+     */
     public Stage getStage() { return stage; }
 
+    /**
+     * Getter for the timer of the application
+     * @return the timer
+     */
     public CountDownTimer getTimer() { return timer; }
 
     @Override
@@ -38,7 +50,7 @@ public class Sudoku extends Application {
 
         Top menu = new Top(this);
 
-        Label timerText = new Label("here");
+        Label timerText = new Label();
 
         timer = new CountDownTimer(timerText);
 
